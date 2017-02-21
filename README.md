@@ -1,5 +1,5 @@
- 2017# CoolCommandLine
-CoolCommandLine 2017 is a turnkey C# commandline processor which adheres to method based queries. In its basic form one just instantiates the `CommandLineManager` instance followed by adding option(s). Each option provides an optional executable delegate to be executed as the final step.
+ # CoolCommandLine 2017
+CoolCommandLine is a turnkey C# commandline processor which adheres to method based queries. In its basic form one just instantiates the `CommandLineManager` instance followed by adding option(s). Each option provides an optional executable delegate to be executed as the final step.
 
     #using CoolCommandLine;
     
