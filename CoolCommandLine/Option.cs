@@ -23,7 +23,7 @@ namespace CoolCommandLine
         public bool IsOptional { get; set; }
 
         /// <summary>
-        /// Holds the letter(s) option. Can be multiple letters.
+        /// Holds the letter option to be indexed and accessed by the command line processor. Such a "-L" is "L"
         /// </summary>
         public string Letter { get; set; }
 
@@ -54,6 +54,17 @@ namespace CoolCommandLine
         public Action<CommandLineManager> Operation { get; private set; }
 
 
+        /// <summary>
+        /// This holds the associated data.
+        /// </summary>
+        public string Data { get; set; }
+
+        /// <summary>
+        /// Is this option have a need for associated data?
+        /// </summary>
+        public bool HasAssociatedData { get; set; }
+
+
         #endregion
 
         #region Construction/Initialization
@@ -62,6 +73,8 @@ namespace CoolCommandLine
         {
             
         }
+
+ 
 
         public Option(string lettersDefinition,  string description, Action<CommandLineManager> operation, bool isOptional = true, bool ignoreCase = true)
         {
@@ -96,18 +109,30 @@ namespace CoolCommandLine
         /// <summary>
         /// Check a set of arguments to determine if there is a match.
         /// </summary>
-        /// <param name="arguments"></param>
+        /// <param name="args">The tokenized argument list.</param>
         /// <returns></returns>
-        public bool ArgumentFoundCheck(List<string> arguments)
+        public bool ArgumentFoundCheck(List<Argument> args )
         {
 
-            var split = arguments.GroupBy(arg => arg.Length == 1)
-                                 .ToList();
+            var split = args.Where(arg => arg.IsArgument)
+                            .GroupBy(arg => arg.TextWithoutDash.Length == 1)
+                            .ToList();
 
-            return 
-            ArgumentMatched = (split.FirstOrDefault(groups => groups.Key)?.Any(arg => LettersSingle.Contains(arg[0])) ?? false) ||
-                              (split.FirstOrDefault(groups => groups.Key == false)?.Any(arg => LettersMultiple.Contains(arg)) ?? false);
+            var argumentMatched = (split.FirstOrDefault(groups => groups.Key)?.FirstOrDefault(arg => LettersSingle.Contains(arg.TextWithoutDash[0])))         // Check single char list
+                                ?? split.FirstOrDefault(groups => groups.Key == false)?.FirstOrDefault(arg => LettersMultiple.Contains(arg.TextWithoutDash)); // Check multiple char list
 
+
+            ArgumentMatched = argumentMatched != null;
+
+            if (ArgumentMatched && HasAssociatedData)
+            {
+               var data = args.SkipWhile(arg => arg.Index != argumentMatched?.Index + 1 ).FirstOrDefault();
+
+                if ((data != null) && (data.IsData))
+                    Data = data.Text;
+            }
+
+            return ArgumentMatched;
         }
 
 

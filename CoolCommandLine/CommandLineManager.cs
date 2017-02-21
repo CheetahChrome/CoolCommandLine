@@ -67,16 +67,27 @@ namespace CoolCommandLine
         {
             if (args != null)
             {
-                var argsToTest = args.Where( arg => IsFreeFormAllowed || arg[0] == '-')
-                                     .Select(arg => arg[0] == '-' ? arg.Substring(1, arg.Length -1) : arg)
-                                     .ToList();
+                var arguments = args.Where(arg => !string.IsNullOrEmpty(arg)) // Sanity check
+                                    .Select((arg, index) => new Argument()
+                                                           {
+                                                               Index      = index,
+                                                               Text       = arg,
+                                                           })
+                                    .ToList();
 
                 var props = GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public)
                                      .ToList();
 
-                Options.Where(opt => opt.ArgumentFoundCheck(argsToTest))
+                Options.Where(opt => opt.ArgumentFoundCheck(arguments))
                        .ToList()
-                       .ForEach(opt => props.FirstOrDefault(prp => prp.Name == opt.Letter)?.SetValue(this, true, null)); // TODO Ignore Case scenario?);
+                       .ForEach(opt =>
+                                       {
+                                           props.FirstOrDefault(prp => prp.Name == opt.Letter)?.SetValue(this, true, null);
+
+                                           if (opt.HasAssociatedData && string.IsNullOrEmpty(opt.Data) == false)
+                                               _optionDataDictionary.Add(opt.Letter, opt.Data);
+
+                                       }); // TODO Ignore Case scenario?);
 
             }
 
@@ -114,7 +125,7 @@ namespace CoolCommandLine
         }
 
         /// <summary>
-        /// When an option needs secondary data to be valid, this is the one to specify it.
+        /// When an option needs secondary (assoicated) data this is the one to specify it.
         /// </summary>
         /// <param name="letter"></param>
         /// <param name="description"></param>
@@ -124,7 +135,7 @@ namespace CoolCommandLine
         /// <returns></returns>
         public CommandLineManager AddOptionRequiresData(string letter, string description, Action<CommandLineManager> operation = null, bool isOptional = true, bool ignoreCase = true)
         {
-            LastOption = new Option(letter, description, operation, isOptional, ignoreCase);
+            LastOption = new Option(letter, description, operation, isOptional, ignoreCase) { HasAssociatedData = true};
             Options.Add(LastOption);
             return this;
         }

@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Argument.cs" />
     <Compile Include="CommandLineExtensions.cs" />
     <Compile Include="CommandLineManager.cs" />
     <Compile Include="Option.cs" />
