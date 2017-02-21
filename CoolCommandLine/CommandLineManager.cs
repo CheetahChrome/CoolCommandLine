@@ -10,6 +10,8 @@ namespace CoolCommandLine
     public class CommandLineManager
     {
 
+        private Dictionary<string, string> _optionDataDictionary = new Dictionary<string, string>();
+
         public bool A { get; set; }
         public bool B { get; set; }
         public bool C { get; set; }
@@ -36,6 +38,15 @@ namespace CoolCommandLine
         public bool X { get; set; }
         public bool Y { get; set; }
         public bool Z { get; set; }
+
+
+        /// <summary>
+        /// Option data storage in KVPs. Such as option `-L` would access it by "L" to retrieve the data. 
+        /// </summary>
+        /// <param name="key">Key to the data which mirrors the option.</param>
+        /// <returns>A value found or string.empty</returns>
+        public string this[string key] => _optionDataDictionary.ContainsKey(key) ? _optionDataDictionary[key] : string.Empty;
+
 
         /// <summary>
         /// If a dash is not required, the an option can be designated without the dash such as `-L` can also be `L`. Hence it is "FreeForm".
