@@ -4,17 +4,15 @@ CoolCommandLine is a turnkey C# commandline argument processor which adheres to 
 ##Turnkey example: 
 
 ```C#
- #using CoolCommandLine;
+#using CoolCommandLine;
     
- static void Main(string[] args)
- {
-    // Look for the "-L" on the command line and if found simulate an action by writing the event out to the console. 
-    (new CommandLineManager()).AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
-                              .Execute(args);
- }
-```
-##Demos
- 
+static void Main(string[] args)
+{
+  // Look for the "-L" on the command line and if found simulate an action by writing the event out to the console. 
+  (new CommandLineManager()).AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
+                            .Execute(args);
+}
+``` 
  Code | What it Does
  ---- | ------------
  `using CoolCommandLine;` | After installation and reference to the project is done, one adds a `#using CoolCommandLine;` to the file.
@@ -26,4 +24,7 @@ CoolCommandLine is a turnkey C# commandline argument processor which adheres to 
 `Console.WriteLine($"Listing operation returned {clm.L}")` | The `CommandLineManager` instance is passed in as `clm`. That instance has a property `clm.L` will return `true` indicating that they user wants `L` action done. One can also check other properties such as `clm.[A-Z] for there status within the `L` operation.
 `.Execute(args);` | Arguments are to be parsed and if any of the options are found, to execute its action operation.
 
- Overall this demo's that once the `-L` is found from any of the command line arguments that a callback/delegate will be executed and the whole `CommandLineManager` instance is returned to so that  individual option properties can be checked for `true` or `false`.
+ Overall this example is that once the `-L` is found from any of the command line argument, that a callback/delegate will be executed. During that execution  the whole `CommandLineManager` instance is passed in as an argument to so that  individual option properties can be checked for `true` or `false`.
+
+---
+
