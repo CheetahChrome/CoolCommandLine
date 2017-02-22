@@ -53,6 +53,11 @@ namespace CoolCommandLine
         public string Description { get; set; }
         public Action<CommandLineManager> Operation { get; private set; }
 
+        /// <summary>
+        /// The validation step is done when an option is found, but before an execute. If the return value is 'false' the execute will be canceled.
+        /// </summary>
+        public Func<CommandLineManager, bool> Validation { get; set; }
+
 
         /// <summary>
         /// This holds the associated data.

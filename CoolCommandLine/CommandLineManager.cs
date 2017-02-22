@@ -96,6 +96,11 @@ namespace CoolCommandLine
             return this;
         }
 
+        /// <summary>
+        /// Each option found will be executed. Before execution the validation will be called
+        /// and if it reports true (validation ok) the option's execute operation will be done. 
+        /// </summary>
+        /// <param name="args"></param>
         public void ExecuteOperation(string[] args = null)
         {
             if (HaveArgumentsBeenParsed == false)
@@ -103,7 +108,11 @@ namespace CoolCommandLine
 
             Options.Where(opt => opt.ArgumentMatched)
                    .ToList()
-                   .ForEach(option => option?.Operation?.Invoke(this));
+                   .ForEach(option =>
+                {
+                    if (option?.Validation?.Invoke(this) ?? true)
+                        option?.Operation?.Invoke(this);
+                });
 
         }
 
@@ -140,6 +149,17 @@ namespace CoolCommandLine
             return this;
         }
 
+
+        /// <summary>
+        /// The validation step is done when an option is found, but before an execute. If the return value is 'false' the execute will be canceled.
+        /// </summary>
+        /// <param name="validationFunc"></param>
+        /// <returns></returns>
+        public CommandLineManager AddValidation(Func<CommandLineManager, bool> validationFunc)
+        {
+            LastOption.Validation = validationFunc;
+            return this;
+        }
 
         /// <summary>
         /// Is the dash required? When it is *not* call AllowFreeForm().

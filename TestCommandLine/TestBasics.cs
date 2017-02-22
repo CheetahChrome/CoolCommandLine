@@ -60,7 +60,31 @@ namespace TestCommandLine
         }
 
 
+        [TestMethod]
+        public void TestValidation()
+        {
 
+            bool lExecuted = false;
+
+            var clm = new CommandLineManager();
+
+            clm.AddOptionRequiresData("L", "List out the operation.", (clmanager) => lExecuted = true);
+
+            clm.AddValidation((manager) => false);
+
+            clm.Execute(new[] { "-L", "Data" });
+
+            Assert.IsFalse(lExecuted);
+
+            // Change it to true. We can do this because the `LastOption` is still set.
+            clm.AddValidation((manager) => true);
+
+            clm.Execute(new[] { "-L", "Data" });
+
+
+            Assert.IsTrue(lExecuted);
+
+        }
         //[TestMethod]
         //public void TestBasic_FreeFormAllowed()
         //{
