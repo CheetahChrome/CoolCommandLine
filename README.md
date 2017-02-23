@@ -1,7 +1,7 @@
 #CoolCommandLine 2017
 CoolCommandLine is a turnkey C# commandline argument processor which adheres to method based queries. In its basic form one just instantiates the `CommandLineManager` instance followed by adding option(s). Each option provides an optional executable delegate to be executed as the final step.
 
-##Turnkey example: 
+##Turnkey Example: 
 
 ```C#
 #using CoolCommandLine;
@@ -24,7 +24,22 @@ static void Main(string[] args)
 `Console.WriteLine($"Listing operation returned {clm.L}")` | The `CommandLineManager` instance is passed in as `clm`. That instance has a property `clm.L` will return `true` indicating that they user wants `L` action done. One can also check other properties such as `clm.[A-Z] for there status within the `L` operation.
 `.Execute(args);` | Arguments are to be parsed and if any of the options are found, to execute its action operation.
 
- Overall this example is that once the `-L` is found from any of the command line argument, that a callback/delegate will be executed. During that execution  the whole `CommandLineManager` instance is passed in as an argument to so that  individual option properties can be checked for `true` or `false`.
+###Purpose 
+To show that once the `-L` is found from any of the command line argument, that a callback/delegate will be executed. During that execution  the whole `CommandLineManager` instance is passed in as an argument to so that  individual option properties can be checked for `true` or `false`.
 
 ---
 
+##Needs Associated Data Example
+
+When an option needs to have following data use the `AddOptionRequiresData` method in the same fashion as the `AddOption`. 
+
+```C#
+ var clm = new CommandLineManager();
+
+ clm.AddOptionRequiresData("D", 
+                           "Directory To Use.", 
+                           (clmanager) =>  Console.WriteLine($"D option has this data {clmanager["D"]); );
+ 
+ clm.Execute(args);
+
+```
