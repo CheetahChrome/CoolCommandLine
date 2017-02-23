@@ -9,9 +9,11 @@ namespace CoolCommandLine
 {
     public class CommandLineManager
     {
-
+        #region Variables
         private Dictionary<string, string> _optionDataDictionary = new Dictionary<string, string>();
+        #endregion
 
+        #region Consumer Properties
         public bool A { get; set; }
         public bool B { get; set; }
         public bool C { get; set; }
@@ -46,8 +48,9 @@ namespace CoolCommandLine
         /// <param name="key">Key to the data which mirrors the option.</param>
         /// <returns>A value found or string.empty</returns>
         public string this[string key] => _optionDataDictionary.ContainsKey(key) ? _optionDataDictionary[key] : string.Empty;
+        #endregion
 
-
+        #region Option Properties
         /// <summary>
         /// If a dash is not required, the an option can be designated without the dash such as `-L` can also be `L`. Hence it is "FreeForm".
         /// </summary>
@@ -62,6 +65,14 @@ namespace CoolCommandLine
         public List<Option> Options { get; set; } = new List<Option>();
 
         private Option LastOption { get; set; }
+
+        #endregion
+
+        #region Construction/Initialization
+
+        #endregion
+
+        #region Methods
 
         public CommandLineManager Parse(string[] args)
         {
@@ -170,6 +181,9 @@ namespace CoolCommandLine
             IsFreeFormAllowed = true;
             return this;
         }
+
+
+    #endregion
 
 
     }
