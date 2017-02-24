@@ -62,13 +62,25 @@ namespace CoolCommandLine
         public bool HaveArgumentsBeenParsed { get; set; }
 
 
+        public string Title { get; set; }
+
+
         public List<Option> Options { get; set; } = new List<Option>();
 
         private Option LastOption { get; set; }
 
+        private Action<CommandLineManager> PreAction { get; set; }
+
+        private Action<CommandLineManager> PostAction { get; set; }
+
         #endregion
 
         #region Construction/Initialization
+
+        public CommandLineManager()
+        {
+            
+        }
 
         #endregion
 
@@ -76,6 +88,7 @@ namespace CoolCommandLine
 
         public CommandLineManager Parse(string[] args)
         {
+
             if (args != null)
             {
                 var arguments = args.Where(arg => !string.IsNullOrEmpty(arg)) // Sanity check
@@ -117,6 +130,8 @@ namespace CoolCommandLine
             if (HaveArgumentsBeenParsed == false)
                 Parse(args);
 
+            PreAction?.Invoke(this);
+
             Options.Where(opt => opt.ArgumentMatched)
                    .ToList()
                    .ForEach(option =>
@@ -125,8 +140,19 @@ namespace CoolCommandLine
                         option?.Operation?.Invoke(this);
                 });
 
+
+            PostAction?.Invoke(this);
+
         }
 
+        /// <summary>
+        /// Instantiate a command line object and pass it on for use. 
+        /// </summary>
+        /// <returns></returns>
+        public static CommandLineManager Instantiation()
+        {
+            return new CommandLineManager();
+        }
 
         /// <summary>
         /// Add an option such as `-L` to check for.
@@ -165,12 +191,37 @@ namespace CoolCommandLine
         /// The validation step is done when an option is found, but before an execute. If the return value is 'false' the execute will be canceled.
         /// </summary>
         /// <param name="validationFunc"></param>
-        /// <returns></returns>
+        /// <returns>CommandLineManager</returns>
         public CommandLineManager AddValidation(Func<CommandLineManager, bool> validationFunc)
         {
             LastOption.Validation = validationFunc;
             return this;
         }
+
+
+        /// <summary>
+        /// Action to be executed before an execute (after validation) occurs.
+        /// </summary>
+        /// <param name="action">Target operation to be run.</param>
+        /// <returns>CommandLineManager</returns>
+        public CommandLineManager PreExecuteAction(Action<CommandLineManager> action)
+        {
+            PreAction = action;
+            return this;
+        }
+
+
+        /// <summary>
+        /// Action to be executed before an execute (after validation) occurs.
+        /// </summary>
+        /// <param name="action">Target operation to be run.</param>
+        /// <returns>CommandLineManager</returns>
+        public CommandLineManager PostExecuteAction(Action<CommandLineManager> action)
+        {
+            PostAction = action;
+            return this;
+        }
+
 
         /// <summary>
         /// Is the dash required? When it is *not* call AllowFreeForm().
