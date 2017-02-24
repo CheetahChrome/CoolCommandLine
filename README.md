@@ -1,5 +1,9 @@
 #CoolCommandLine 2017
-CoolCommandLine is a turnkey C# commandline argument processor which adheres to method based queries. In its basic form one just instantiates the `CommandLineManager` instance followed by adding option(s). Each option provides an optional executable delegate to be executed as the final step.
+CoolCommandLine is a turnkey C# command line argument processor which adheres to a design of chained method based queries during development and the use of runtime IOC operations specified by the developer. 
+
+*See TurnKey Example below for all those definitions shown in practice.* 
+
+To begin operations one just instantiates the `CommandLineManager` class followed by adding option(s) (`-{Option letter | Option word}`) which relate to specific command line option. Each option provides an optional executable action delegate to be executed as the final step. Finally calling `Execute( {arguments array} )` parses the arguments and executes any actions as setup.
 
 ##Turnkey Example: 
 
