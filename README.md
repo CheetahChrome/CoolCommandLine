@@ -13,14 +13,15 @@ To begin operations one just instantiates the `CommandLineManager` class followe
 static void Main(string[] args)
 {
   // Look for the "-L" on the command line and if found simulate an action by writing the event out to the console. 
-  (new CommandLineManager()).AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
-                            .Execute(args);
+  CommandLineManager.Instantiation()
+                    .AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
+                    .Execute(args);
 }
 ``` 
  Code | What it Does
  ---- | ------------
  `using CoolCommandLine;` | After installation and reference to the project is done, one adds a `#using CoolCommandLine;` to the file.
- `new CommandLineManager()` | Instantiate the CoolCommandLine manager.
+ `CommandLineManager.Instantiation()` | Instantiate the CoolCommandLine manager or do it via new `(new CommandLineManager()). ...`.
  `.AddOption(...)` | Use `AddOption` method to define the command line options which are expected before an action can occur.
  `"L, List"` | Shows the author looking for a command line option of `-L`. This is by done specfying the the `L` (without a dash) and its long option of `List` in a comma seperated fasion. Requiring either a `-L` or a `-List` to be found in the arguments to have a targetted action to be done.
  `"List the data."` | Describe the option for later usage in an operations map. (Not shown here)
