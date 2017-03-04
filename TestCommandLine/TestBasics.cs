@@ -23,10 +23,15 @@ namespace TestCommandLine
 
             
             Assert.IsTrue(clm.L);
-            Assert.IsTrue(clm.Z);
+            Assert.IsTrue(clm.IsMultipleLetterOptionFound("L"));
+            Assert.IsFalse(clm.IsMultipleLetterOptionFound("Data"));
             Assert.IsTrue(clm.S);
             Assert.IsFalse(clm.D);
             Assert.IsTrue(lExecuted);
+
+            Assert.IsTrue(clm.IsMultipleLetterOptionFound("Zebra"));
+
+            Assert.IsFalse(clm.Z);
             Assert.IsTrue(zExecuted);
 
         }
@@ -48,14 +53,36 @@ namespace TestCommandLine
 
             Assert.IsTrue(clm.L);
             Assert.IsTrue(clm["L"].Equals("Data"));
-            Assert.IsTrue(clm.Z);
+
             Assert.IsTrue(string.IsNullOrEmpty(clm["Z"]));
             Assert.IsTrue(clm.S);
             Assert.IsTrue(string.IsNullOrEmpty(clm["S"]));
             Assert.IsFalse(clm.D);
             Assert.IsTrue(string.IsNullOrEmpty(clm["D"]));
             Assert.IsTrue(lExecuted);
+            Assert.IsFalse(clm.Z);
             Assert.IsTrue(zExecuted);
+
+        }
+
+
+
+        /// <summary>
+        /// We expect to be able to have a double letter as an option and have its data accessed like a single.
+        /// </summary>
+        [TestMethod]
+        public void TestDataDoubleLetter()
+        {
+            bool lExecuted = false;
+
+            var clm = new CommandLineManager();
+
+            clm.AddOptionRequiresData("LD", "List out the operation.", (clmanager) => lExecuted = true);
+
+            clm.Execute(new[] { "-LD", "Data" });
+            Assert.IsTrue(clm["LD"].Equals("Data"));
+            Assert.IsTrue(lExecuted);
+
 
         }
 

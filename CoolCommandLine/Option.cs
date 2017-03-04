@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,12 @@ namespace CoolCommandLine
 
         public bool IsOptional { get; set; }
 
+
+        /// <summary>
+        /// Has this option been setup to have a single letter as an option?
+        /// </summary>
+        public bool IsSingleLetterOption { get; set; }
+
         /// <summary>
         /// Holds the letter option to be indexed and accessed by the command line processor. Such a "-L" is "L"
         /// </summary>
@@ -38,7 +45,6 @@ namespace CoolCommandLine
 
 
         private List<string> LettersMultiple { get; set; }
-
 
         /// <summary>
         /// What the consumer has set us up with.
@@ -60,6 +66,12 @@ namespace CoolCommandLine
 
 
         /// <summary>
+        /// The validation step is done when an option is found, but before an execute. If the return value is 'false' the execute will be canceled.
+        /// This operation returns this object in the function as well.
+        /// </summary>
+        public Func<CommandLineManager, Option, bool> ValidationExtra { get; set; }
+
+        /// <summary>
         /// This holds the associated data.
         /// </summary>
         public string Data { get; set; }
@@ -67,7 +79,13 @@ namespace CoolCommandLine
         /// <summary>
         /// Is this option have a need for associated data?
         /// </summary>
-        public bool HasAssociatedData { get; set; }
+        public bool HasAssociatedData => string.IsNullOrEmpty(Data);
+
+
+        /// <summary>
+        /// Is this option have a need for associated data?
+        /// </summary>
+        public bool NeedsAssociatedData { get; set; }
 
 
         #endregion
@@ -81,7 +99,7 @@ namespace CoolCommandLine
 
  
 
-        public Option(string lettersDefinition,  string description, Action<CommandLineManager> operation, bool isOptional = true, bool ignoreCase = true)
+        public Option(string lettersDefinition, string description, Action<CommandLineManager> operation, bool isOptional = true, bool ignoreCase = true)
         {
             InitialLetterDefinition = lettersDefinition;
 
@@ -90,16 +108,20 @@ namespace CoolCommandLine
                            .Select(mt => mt.Value)
                            .ToList();
 
-            // If no Letter is found....extract the first letter from the first token to use at that letter.
-            Letter = Letters.FirstOrDefault(token => token.Length == 1)?.ToUpper() ?? Letters[0].Substring(0, 1).ToUpper();
+            Letter = Letters.FirstOrDefault(token => token.Length == 1)?.ToUpper();
+
+            IsSingleLetterOption = Letter != null;
+
+            //if (IsSingleLetterOption)
+            //    Letter = Letters.FirstOrDefault(token => token.Length == 1)?.ToUpper() ?? Letters[0].Substring(0, 1).ToUpper();
 
             var grouped = Letters.GroupBy(lt => lt.Length == 1)
                                  .ToList();
+
             LettersSingle = grouped.Where(gr => gr.Key)
                                    .SelectMany(grp => grp.Select(letter => letter [0])
                                                          .ToList())
                                    .ToList();
-
 
             LettersMultiple = grouped.Where(gr => gr.Key == false)
                                      .SelectMany(grp => grp)
@@ -129,7 +151,7 @@ namespace CoolCommandLine
 
             ArgumentMatched = argumentMatched != null;
 
-            if (ArgumentMatched && HasAssociatedData)
+            if (ArgumentMatched && NeedsAssociatedData)
             {
                var data = args.SkipWhile(arg => arg.Index != argumentMatched?.Index + 1 ).FirstOrDefault();
 
