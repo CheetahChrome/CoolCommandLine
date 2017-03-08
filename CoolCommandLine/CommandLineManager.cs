@@ -88,6 +88,16 @@ namespace CoolCommandLine
         /// </summary>
         private Action<CommandLineManager> PostAction { get; set; }
 
+        /// <summary>
+        /// Should we execute the titling and information operation when there are no actions?
+        /// </summary>
+        public bool HasShowTitleAndDescriptionsOnNoAction { get; set; }
+
+        /// <summary>
+        /// When the user wants to do the titling, this action overrides the default titling when not null.
+        /// </summary>
+        public Action<CommandLineManager> AlternateTitlingAction { get; private set; }
+
         #endregion
 
         #region Construction/Initialization
@@ -288,7 +298,19 @@ namespace CoolCommandLine
             return _optionSetDictionary.ContainsKey(wordOption) && _optionSetDictionary[wordOption];
         }
 
-
+        /// <summary>
+        /// When there is no action done, report the title and options. Selecting this
+        /// performs a console.writeline. If another reporting is needed use the alternate reporting 
+        /// action operation.
+        /// </summary>
+        /// <param name="alternateReporting">Used in-leue of console-writeline.</param>
+        /// <returns>The operation to allow command chaining.</returns>
+        public CommandLineManager ReportTitleAndOptionInfoWhenNoAction(Action<CommandLineManager> alternateReporting = null)
+        {
+            HasShowTitleAndDescriptionsOnNoAction = true;
+            AlternateTitlingAction = alternateReporting;
+            return this;
+        }
         #endregion
 
 
