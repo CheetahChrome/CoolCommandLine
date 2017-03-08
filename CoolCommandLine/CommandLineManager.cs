@@ -63,16 +63,29 @@ namespace CoolCommandLine
         /// </summary>
         public bool HaveArgumentsBeenParsed { get; set; }
 
-
+        /// <summary>
+        /// Title of the application to be presented to the user.
+        /// </summary>
         public string Title { get; set; }
 
-
+        /// <summary>
+        /// The options which are setup for this operation.
+        /// </summary>
         public List<Option> Options { get; set; } = new List<Option>();
 
+        /// <summary>
+        /// The last option added so we can associate specific add-on items to this option.
+        /// </summary>
         private Option LastOption { get; set; }
 
+        /// <summary>
+        /// The user action to execute before the primary action.
+        /// </summary>
         private Action<CommandLineManager> PreAction { get; set; }
 
+        /// <summary>
+        /// The post action to be executed.
+        /// </summary>
         private Action<CommandLineManager> PostAction { get; set; }
 
         #endregion
