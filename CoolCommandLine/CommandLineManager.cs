@@ -15,6 +15,13 @@ namespace CoolCommandLine
         private Dictionary<string, bool>   _optionSetDictionary  = new Dictionary<string, bool>();
         #endregion
 
+        #region Generic Actions
+        /// <summary>
+        /// When the user wants to do the titling, this action overrides the default titling when not null.
+        /// </summary>
+        public Action<CommandLineManager> AlternateTitlingAction { get; private set; } 
+        #endregion
+
         #region Consumer Properties
         public bool A { get; set; }
         public bool B { get; set; }
@@ -59,11 +66,6 @@ namespace CoolCommandLine
         public bool IsFreeFormAllowed { get; set; }
 
         /// <summary>
-        /// Used by the execute to determine whether the arguments need to be parsed.
-        /// </summary>
-        public bool HaveArgumentsBeenParsed { get; set; }
-
-        /// <summary>
         /// Title of the application to be presented to the user.
         /// </summary>
         public string Title { get; set; }
@@ -88,16 +90,25 @@ namespace CoolCommandLine
         /// </summary>
         private Action<CommandLineManager> PostAction { get; set; }
 
+        #endregion
+
+        #region Operation Public Properties
+        /// <summary>
+        /// Used by the execute to determine whether the arguments need to be parsed.
+        /// </summary>
+        public bool HaveArgumentsBeenParsed { get; set; }
+
         /// <summary>
         /// Should we execute the titling and information operation when there are no actions?
         /// </summary>
         public bool HasShowTitleAndDescriptionsOnNoAction { get; set; }
 
         /// <summary>
-        /// When the user wants to do the titling, this action overrides the default titling when not null.
+        /// If after parsing it is determined that a command line option has been selected
+        /// and there is an action specifed, this will be true.
         /// </summary>
-        public Action<CommandLineManager> AlternateTitlingAction { get; private set; }
-
+        public bool HasOperationActionToDo { get; set; }
+            
         #endregion
 
         #region Construction/Initialization
@@ -112,7 +123,7 @@ namespace CoolCommandLine
         #region Methods
 
         /// <summary>
-        /// Take in the actual runtime arguments and process them against the user options.
+        /// Ingest runtime arguments and process them against the user options.
         /// </summary>
         /// <param name="args">Runtime arguments</param>
         /// <returns>A Command Line Manager for reuse.</returns>
@@ -135,14 +146,18 @@ namespace CoolCommandLine
                 Options.Where(opt => opt.ArgumentFoundCheck(arguments))
                        .ToList()
                        .ForEach(opt =>
-                                       {
+                                       {   // Reflect into this object and turn on the target option letter's bool
                                            props.FirstOrDefault(prp => prp.Name == opt.Letter)?.SetValue(this, true, null);
 
                                            opt.Letters.ForEach(word => _optionSetDictionary.Add(word, true));
 
                                            if (opt.NeedsAssociatedData && string.IsNullOrEmpty(opt.Data) == false)
+                                           {
                                                opt.Letters.ForEach(word => _optionDataDictionary.Add(word, opt.Data)); // Add to all dictionary key possibilities
+                                           }
 
+                                           if (opt.Operation != null)
+                                               HasOperationActionToDo = true; // Mark this status to true. 
                                        }); // TODO Ignore Case scenario?);
 
             }
@@ -161,6 +176,10 @@ namespace CoolCommandLine
         {
             if (HaveArgumentsBeenParsed == false)
                 Parse(args);
+
+            // Do we show the altnerate (user title?)
+            if ((HasShowTitleAndDescriptionsOnNoAction) && (HasOperationActionToDo == false))
+                AlternateTitlingAction?.Invoke(this);
 
             PreAction?.Invoke(this);
 

@@ -13,7 +13,13 @@ namespace CoolCommandLine
             return manager.Parse(args);
         }
 
-        public static void Execute(this CommandLineManager manager, string[] args)
+
+        /// <summary>
+        /// Execute the arguments, pass in arguments if <see cref="Parse"/> has not been called with arguments.
+        /// </summary>
+        /// <param name="manager">Target manager for the fluent chaining flow.</param>
+        /// <param name="args">Optionals arguments when arguments have not been passed in.</param>
+        public static void Execute(this CommandLineManager manager, string[] args = null)
         {
             manager.ExecuteOperation(args);
         }

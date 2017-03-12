@@ -10,14 +10,24 @@ namespace TestCommandLine
         [TestMethod]
         public void TitlingAndDescription()
         {
-            bool otherOp = false;
+            bool titleOp   = false;
+            bool lExecuted = false;
+            var clm = new CommandLineManager();
 
-            CommandLineManager.Instantiation()
-                              .ReportTitleAndOptionInfoWhenNoAction(cml => otherOp = true)
-                              .Execute(null);
+            clm.ReportTitleAndOptionInfoWhenNoAction(cml => titleOp = true)
+               .AddOptionRequiresData("LD", "List out the operation.", (clmanager) => lExecuted = true)
+               .Execute();
 
-            Assert.IsTrue(otherOp);
+            Assert.IsTrue(titleOp);
+            Assert.IsFalse(lExecuted);
 
+            // Reset for alternate test.
+            titleOp = false;
+            clm.Parse(new[] { "-LD", "Data" })
+               .Execute();
+
+            Assert.IsFalse(titleOp);
+            Assert.IsTrue(lExecuted);
         }
     }
 }
