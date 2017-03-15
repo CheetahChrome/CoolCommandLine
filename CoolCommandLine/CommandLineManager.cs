@@ -214,14 +214,26 @@ namespace CoolCommandLine
         /// Take the calling executable and extract the version and append it to the title and output it to the console with a LineBreak
         /// before and after the tite line.
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="title">Info about the title before the version. If default the name of the calling assembly.</param>
         /// <param name="afterTitle">Optional text to go after the version.</param>
         /// <returns></returns>
-        public CommandLineManager DisplayTitleAndVersion(string title, string afterTitle = "")
+        public CommandLineManager DisplayTitleAndVersion(string title = "", string afterTitle = "")
         {
+            //  var info = Assembly.GetCallingAssembly().FullName.Split(',');
 
-            Console.WriteLine($"{Environment.NewLine}{title}{Regex.Replace(Assembly.GetCallingAssembly().FullName.Split(',')[1], @"(\sVersion=)", string.Empty)}{afterTitle}{Environment.NewLine}");
 
+            var info = new AssemblyInfoCalling();
+
+            if (info != null)
+            {
+
+                string version = info.VersionFull;// info[1];
+
+                string product = string.IsNullOrEmpty(title) ? $"{info.Product} (" : title;
+                afterTitle = string.IsNullOrEmpty(afterTitle) ? ")" : afterTitle;
+
+                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterTitle}{Environment.NewLine}");
+            }
             return this;
         }
 

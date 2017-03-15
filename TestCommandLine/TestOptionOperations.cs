@@ -10,7 +10,7 @@ namespace TestCommandLine
         [TestMethod]
         public void Titling()
         {
-            bool titleOp   = false;
+            bool titleOp = false;
             bool lExecuted = false;
             var clm = new CommandLineManager();
 
@@ -28,6 +28,18 @@ namespace TestCommandLine
 
             Assert.IsFalse(titleOp);
             Assert.IsTrue(lExecuted);
+        }
+
+        [TestMethod]
+        public void TitleDefault()
+        {
+            CommandLineManager.Instantiation()
+                              .DisplayTitleAndVersion()
+                              .Execute();
+
+
+
+
         }
     }
 }

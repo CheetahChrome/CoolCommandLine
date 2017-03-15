@@ -12,8 +12,11 @@ namespace ConsoleTest
         static void Main(string[] args)
         {
 
-            (new CommandLineManager()).AddOption("L", "List out the operation.", (clm)=> Console.WriteLine("List out the operation"))
-                                      .Execute(args);
+            (new CommandLineManager())
+                                      .DisplayTitleAndVersion()
+                                      .AddOption("L", "List out the operation.", (clm)=> Console.WriteLine("List out the operation"))
+                                      .Execute(args)
+                            ;
 
         }
     }

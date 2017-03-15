@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Argument.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CommandLineExtensions.cs" />
     <Compile Include="CommandLineManager.cs" />
     <Compile Include="Option.cs" />
