@@ -13,6 +13,7 @@ static void Main(string[] args)
 {
   // Look for the "-L" on the command line and if found simulate an action by writing the event out to the console. 
   CommandLineManager.Instantiation()
+                    .DisplayProductAndVersion()  // Take the Product name and version from AssemblyInfo.cs
                     .AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
                     .Execute(args);
 }
@@ -33,7 +34,7 @@ To show that once the `-L` is found from any of the command line argument, that 
 
 ---
 
-##Needs Associated Data Example
+## Example Needs Associated Data 
 
 When an option needs to have following data use the `AddOptionRequiresData` method in the same fashion as the `AddOption`. 
 
