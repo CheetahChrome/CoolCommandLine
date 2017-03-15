@@ -48,3 +48,5 @@ When an option needs to have following data use the `AddOptionRequiresData` meth
  clm.Execute(args);
 
 ```
+
+See [CoolCommandLine Wiki](https://github.com/CheetahChrome/CoolCommandLine/wiki) for more!
