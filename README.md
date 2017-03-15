@@ -33,7 +33,7 @@ To show that once the `-L` is found from any of the command line argument, that 
 
 ---
 
-##Needs Associated Data Example
+## Example Needs Associated Data 
 
 When an option needs to have following data use the `AddOptionRequiresData` method in the same fashion as the `AddOption`. 
 
