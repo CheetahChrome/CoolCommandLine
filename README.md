@@ -13,7 +13,7 @@ static void Main(string[] args)
 {
   // Look for the "-L" on the command line and if found simulate an action by writing the event out to the console. 
   CommandLineManager.Instantiation()
-                    .DisplayTitleAndVersion()  // Take the Product name and version from AssemblyInfo.cs
+                    .DisplayProductAndVersion()  // Take the Product name and version from AssemblyInfo.cs
                     .AddOption("L, List", "List the data.", (clm)=> Console.WriteLine($"Listing operation returned {clm.L} "))
                     .Execute(args);
 }
