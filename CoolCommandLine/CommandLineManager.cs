@@ -217,7 +217,7 @@ namespace CoolCommandLine
         /// <param name="title">Info about the title before the version. If default the name of the calling assembly.</param>
         /// <param name="afterTitle">Optional text to go after the version.</param>
         /// <returns></returns>
-        public CommandLineManager DisplayTitleAndVersion(string title = "", string afterTitle = "")
+        public CommandLineManager DisplayTitleAndVersion(string title = "", string afterVersion = "")
         {
             //  var info = Assembly.GetCallingAssembly().FullName.Split(',');
 
@@ -230,15 +230,15 @@ namespace CoolCommandLine
                 string version = info.VersionFull;// info[1];
 
                 string product = string.IsNullOrEmpty(title) ? $"{info.Title} (" : title;
-                afterTitle = string.IsNullOrEmpty(afterTitle) ? ")" : afterTitle;
+                afterVersion = string.IsNullOrEmpty(afterVersion) ? ")" : afterVersion;
 
-                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterTitle}{Environment.NewLine}");
+                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterVersion}{Environment.NewLine}");
             }
             return this;
         }
 
 
-        public CommandLineManager DisplayProductAndVersion(string title = "", string afterTitle = "")
+        public CommandLineManager DisplayProductAndVersion(string product = "", string afterVersion = "")
         {
             //  var info = Assembly.GetCallingAssembly().FullName.Split(',');
 
@@ -250,10 +250,10 @@ namespace CoolCommandLine
 
                 string version = info.VersionFull;// info[1];
 
-                string product = string.IsNullOrEmpty(title) ? $"{info.Product} (" : title;
-                afterTitle = string.IsNullOrEmpty(afterTitle) ? ")" : afterTitle;
+                product = string.IsNullOrEmpty(product) ? $"{info.Product} (" : product;
+                afterVersion = string.IsNullOrEmpty(afterVersion) ? ")" : afterVersion;
 
-                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterTitle}{Environment.NewLine}");
+                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterVersion}{Environment.NewLine}");
             }
             return this;
         }
