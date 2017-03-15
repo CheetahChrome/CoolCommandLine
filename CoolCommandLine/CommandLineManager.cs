@@ -19,7 +19,12 @@ namespace CoolCommandLine
         /// <summary>
         /// When the user wants to do the titling, this action overrides the default titling when not null.
         /// </summary>
-        public Action<CommandLineManager> AlternateTitlingAction { get; private set; } 
+        public Action<CommandLineManager> TitleAction { get; set; } 
+
+        /// <summary>
+        /// When Description action is required the user can override the operation. 
+        /// </summary>
+        public Action<CommandLineManager> DescriptionAction { get; set; }
         #endregion
 
         #region Consumer Properties
@@ -179,7 +184,7 @@ namespace CoolCommandLine
 
             // Do we show the altnerate (user title?)
             if ((HasShowTitleAndDescriptionsOnNoAction) && (HasOperationActionToDo == false))
-                AlternateTitlingAction?.Invoke(this);
+                TitleAction?.Invoke(this);
 
             PreAction?.Invoke(this);
 
@@ -324,10 +329,18 @@ namespace CoolCommandLine
         /// </summary>
         /// <param name="alternateReporting">Used in-leue of console-writeline.</param>
         /// <returns>The operation to allow command chaining.</returns>
-        public CommandLineManager ReportTitleAndOptionInfoWhenNoAction(Action<CommandLineManager> alternateReporting = null)
+        public CommandLineManager ReportTitle(Action<CommandLineManager> alternateTitle = null)
         {
             HasShowTitleAndDescriptionsOnNoAction = true;
-            AlternateTitlingAction = alternateReporting;
+            TitleAction = alternateTitle;
+            return this;
+        }
+
+
+        public CommandLineManager ReportDescription(Action<CommandLineManager> alternateDescription = null)
+        {
+            HasShowTitleAndDescriptionsOnNoAction = true;
+            DescriptionAction = alternateDescription;
             return this;
         }
         #endregion

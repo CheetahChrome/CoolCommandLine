@@ -8,13 +8,13 @@ namespace TestCommandLine
     public class TestOptionOperations
     {
         [TestMethod]
-        public void TitlingAndDescription()
+        public void Titling()
         {
             bool titleOp   = false;
             bool lExecuted = false;
             var clm = new CommandLineManager();
 
-            clm.ReportTitleAndOptionInfoWhenNoAction(cml => titleOp = true)
+            clm.ReportTitle(cml => titleOp = true)
                .AddOptionRequiresData("LD", "List out the operation.", (clmanager) => lExecuted = true)
                .Execute();
 
