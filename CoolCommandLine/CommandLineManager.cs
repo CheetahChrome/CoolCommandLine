@@ -229,6 +229,27 @@ namespace CoolCommandLine
 
                 string version = info.VersionFull;// info[1];
 
+                string product = string.IsNullOrEmpty(title) ? $"{info.Title} (" : title;
+                afterTitle = string.IsNullOrEmpty(afterTitle) ? ")" : afterTitle;
+
+                Console.WriteLine($"{Environment.NewLine}{product}{Regex.Replace(version, @"(\sVersion=)", string.Empty)}{afterTitle}{Environment.NewLine}");
+            }
+            return this;
+        }
+
+
+        public CommandLineManager DisplayProductAndVersion(string title = "", string afterTitle = "")
+        {
+            //  var info = Assembly.GetCallingAssembly().FullName.Split(',');
+
+
+            var info = new AssemblyInfoCalling();
+
+            if (info != null)
+            {
+
+                string version = info.VersionFull;// info[1];
+
                 string product = string.IsNullOrEmpty(title) ? $"{info.Product} (" : title;
                 afterTitle = string.IsNullOrEmpty(afterTitle) ? ")" : afterTitle;
 
