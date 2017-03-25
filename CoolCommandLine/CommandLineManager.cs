@@ -184,21 +184,25 @@ namespace CoolCommandLine
 
             // Do we show the altnerate (user title?)
             if ((HasShowTitleAndDescriptionsOnNoAction) && (HasOperationActionToDo == false))
+            {
                 TitleAction?.Invoke(this);
+                DescriptionAction?.Invoke(this);
+            }
 
-            PreAction?.Invoke(this);
+            if (HasOperationActionToDo)
+            {
+                PreAction?.Invoke(this);
 
-            Options.Where(opt => opt.ArgumentMatched)
-                   .ToList()
-                   .ForEach(option =>
-                {
-                    if ((option?.Validation?.Invoke(this) ?? true) && (option?.ValidationExtra?.Invoke(this, option) ?? true))
-                        option?.Operation?.Invoke(this);
-                });
+                Options.Where(opt => opt.ArgumentMatched)
+                       .ToList()
+                       .ForEach(option =>
+                    {
+                        if ((option?.Validation?.Invoke(this) ?? true) && (option?.ValidationExtra?.Invoke(this, option) ?? true))
+                            option?.Operation?.Invoke(this);
+                    });
 
-
-            PostAction?.Invoke(this);
-
+                PostAction?.Invoke(this);
+            }
         }
 
         /// <summary>
@@ -369,15 +373,40 @@ namespace CoolCommandLine
             return this;
         }
 
-
-        public CommandLineManager ReportDescription(Action<CommandLineManager> alternateDescription = null)
+        /// <summary>
+        /// The user has indicated that an operation description should be provided when no actions
+        /// are performed.
+        /// </summary>
+        /// <param name="alternateDescription">User supplied description operation; overrides the default</param>
+        /// <returns>Returns the current instance for query chaining.</returns>
+        public CommandLineManager DisplayDescriptionOnNoOperation(Action<CommandLineManager> alternateDescription = null)
         {
             HasShowTitleAndDescriptionsOnNoAction = true;
-            DescriptionAction = alternateDescription;
+            DescriptionAction = alternateDescription ?? ProvideDescriptionWhenNoOpsDone;
             return this;
         }
-        #endregion
 
+        /// <summary>
+        /// This is the default description provider which will enumerate the options.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ProvideDescriptionWhenNoOpsDone(CommandLineManager obj)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            Options.ForEach(opt =>
+            {
+                if (opt.IsOptional)
+                    sb.Append("\t");
+
+                sb.AppendLine($"-{opt.Letter}\t{opt.Description}");
+                
+            });
+
+            Console.WriteLine(sb.ToString());
+
+        }
+        #endregion
 
     }
 }
