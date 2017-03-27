@@ -18,7 +18,10 @@ namespace TestCommandLine
                               .DisplayTitleAndVersion()
                               .DisplayDescriptionOnNoOperation()
                               .AddOption("M", "Migrate the directory")
+                              .AssociateWithSubOptions("D")
                               .AddOptionRequiresData("D", "Directory To Migrate")
+                              .AddOption("L", "List the directory contents")
+                              .AssociateWithSubOptions("D")
                               .Execute();
         }
     }

@@ -25,6 +25,12 @@ namespace CoolCommandLine
 
 
         /// <summary>
+        /// Is this option a viable one to another option? Used for description.
+        /// </summary>
+        public List<string> AssociatedWithOptions { get; set; }
+
+
+        /// <summary>
         /// Has this option been setup to have a single letter as an option?
         /// </summary>
         public bool IsSingleLetterOption { get; set; }
@@ -56,7 +62,13 @@ namespace CoolCommandLine
 
 
         public string LongName { get; set; }
+
+        /// <summary>
+        /// Holds the descriptive text to be shown when there is no output.
+        /// </summary>
         public string Description { get; set; }
+
+
         public Action<CommandLineManager> Operation { get; private set; }
 
         /// <summary>
@@ -166,6 +178,15 @@ namespace CoolCommandLine
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Provide a formatted output of this description.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"-{Letter}" + (NeedsAssociatedData ? " { XXX } " : string.Empty) + $"\t{Description}";
+        }
 
         #endregion
 

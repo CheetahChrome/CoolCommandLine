@@ -286,7 +286,7 @@ namespace CoolCommandLine
         /// <param name="operation"></param>
         /// <param name="isOptional"></param>
         /// <param name="ignoreCase"></param>
-        /// <returns></returns>
+        /// <returns>CommandLineManager</returns>
         public CommandLineManager AddOptionRequiresData(string letter, string description, Action<CommandLineManager> operation = null, bool isOptional = true, bool ignoreCase = true)
         {
             LastOption = new Option(letter, description, operation, isOptional, ignoreCase) { NeedsAssociatedData = true};
@@ -294,6 +294,17 @@ namespace CoolCommandLine
             return this;
         }
 
+
+        /// <summary>
+        /// Define what options are related to the proceeded option declaration. Used for description processing.
+        /// </summary>
+        /// <param name="subOptions">Target options without dash character.</param>
+        /// <returns>CommandLineManager</returns>
+        public CommandLineManager AssociateWithSubOptions(params string[] subOptions)
+        {
+            LastOption.AssociatedWithOptions = subOptions.ToList();
+            return this;
+        }
 
         /// <summary>
         /// The validation step is done when an option is found, but before an execute. If the return value is 'false' the execute will be canceled.
@@ -389,23 +400,47 @@ namespace CoolCommandLine
         /// <summary>
         /// This is the default description provider which will enumerate the options.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="obj">Not used main instance.</param>
         private void ProvideDescriptionWhenNoOpsDone(CommandLineManager obj)
         {
             StringBuilder sb = new StringBuilder();
 
-            Options.ForEach(opt =>
-            {
-                if (opt.IsOptional)
-                    sb.Append("\t");
+            var PrimaryOptions = Options.Where(opt => opt.AssociatedWithOptions != null).ToList();
 
-                sb.AppendLine($"-{opt.Letter}\t{opt.Description}");
-                
-            });
+            if (PrimaryOptions.Any() == false) // Just show all options, there is not enough info to format with suboptions
+            {
+
+                Options.ForEach(opt =>
+                {
+                  //  if (opt.IsOptional)
+                 //       sb.Append("\t");
+
+                    sb.AppendLine(opt.ToString());
+                });
+            }
+            else
+            {
+                PrimaryOptions.Select(prime => new
+                {
+                    Prime = prime,
+                    SubOptions = Options.Where(opt => prime.AssociatedWithOptions.Contains(opt.Letter))
+                                        .ToList()
+                })
+                .ToList()
+                .ForEach(optimus =>
+                {
+                    sb.AppendLine($"{optimus.Prime.ToString()} using");
+                    optimus.SubOptions.ForEach(sub => sb.AppendLine($"\t{sub.ToString()}"));
+                    sb.AppendLine(string.Empty);
+                });
+            }
 
             Console.WriteLine(sb.ToString());
 
         }
+
+
+       
         #endregion
 
     }
