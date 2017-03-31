@@ -25,6 +25,20 @@ namespace CoolCommandLine
         /// When Description action is required the user can override the operation. 
         /// </summary>
         public Action<CommandLineManager> DescriptionAction { get; set; }
+
+        /// <summary>
+        /// Allows the user to provide text before a description action event.
+        /// </summary>
+        private Action<CommandLineManager> DescriptionActionBefore { get; set; }
+
+        /// <summary>
+        /// Allows the user to provide text after a description action event.
+        /// </summary>
+        private Action<CommandLineManager> DescriptionActionAfter { get; set; }
+
+
+
+
         #endregion
 
         #region Consumer Properties
@@ -113,7 +127,8 @@ namespace CoolCommandLine
         /// and there is an action specifed, this will be true.
         /// </summary>
         public bool HasOperationActionToDo { get; set; }
-            
+
+
         #endregion
 
         #region Construction/Initialization
@@ -186,7 +201,9 @@ namespace CoolCommandLine
             if ((HasShowTitleAndDescriptionsOnNoAction) && (HasOperationActionToDo == false))
             {
                 TitleAction?.Invoke(this);
+                DescriptionActionBefore?.Invoke(this);
                 DescriptionAction?.Invoke(this);
+                DescriptionActionAfter?.Invoke(this);
             }
 
             if (HasOperationActionToDo)
@@ -394,6 +411,29 @@ namespace CoolCommandLine
         {
             HasShowTitleAndDescriptionsOnNoAction = true;
             DescriptionAction = alternateDescription ?? ProvideDescriptionWhenNoOpsDone;
+            return this;
+        }
+
+        /// <summary>
+        /// Provide the user an operation, most likely to write, text before the description when no operation occurs. 
+        /// </summary>
+        /// <param name="preDescription">User supplied operation</param>
+        /// <returns>Returns the current instance for query chaining.</returns>
+        public CommandLineManager DisplayBeforeDescription(Action<CommandLineManager> preDescription)
+        {
+            DescriptionActionBefore = preDescription;
+            return this;
+        }
+
+
+        /// <summary>
+        /// Provide the user an operation, most likely to write, text after the description when no operation occurs. 
+        /// </summary>
+        /// <param name="postDescription">User supplied operation</param>
+        /// <returns>Returns the current instance for query chaining.</returns>
+        public CommandLineManager DisplayAfterDescription(Action<CommandLineManager> postDescription)
+        {
+            DescriptionActionAfter = postDescription;
             return this;
         }
 
