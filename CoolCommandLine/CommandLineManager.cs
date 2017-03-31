@@ -282,10 +282,10 @@ namespace CoolCommandLine
         /// <summary>
         /// Add an option such as `-L` to check for.
         /// </summary>
-        /// <param name="letter">Target letter or letters </param>
-        /// <param name="description"></param>
-        /// <param name="operation"></param>
-        /// <param name="isOptional"></param>
+        /// <param name="letter">Target letter or letters to initiate the operation or data association.</param>
+        /// <param name="description">Short discription of the option to be used when a description operation is being done.</param>
+        /// <param name="operation">User action to be performed if the consumer has choosen this option and if validation returns true.</param>
+        /// <param name="isOptional">Is thus option required, true for yes.</param>
         /// <param name="ignoreCase"></param>
         /// <returns></returns>
         public CommandLineManager AddOption(string letter,  string description, Action<CommandLineManager> operation = null, bool isOptional = true, bool ignoreCase = true)
@@ -298,10 +298,10 @@ namespace CoolCommandLine
         /// <summary>
         /// When an option needs secondary (assoicated) data this is the one to specify it.
         /// </summary>
-        /// <param name="letter"></param>
-        /// <param name="description"></param>
-        /// <param name="operation"></param>
-        /// <param name="isOptional"></param>
+        /// <param name="letter">Target letter or letters to initiate the operation or data association.</param>
+        /// <param name="description">Short discription of the option to be used when a description operation is being done.</param>
+        /// <param name="operation">User action to be performed if the consumer has choosen this option and if validation returns true.</param>
+        /// <param name="isOptional">Is thus option required, true for yes.</param>
         /// <param name="ignoreCase"></param>
         /// <returns>CommandLineManager</returns>
         public CommandLineManager AddOptionRequiresData(string letter, string description, Action<CommandLineManager> operation = null, bool isOptional = true, bool ignoreCase = true)

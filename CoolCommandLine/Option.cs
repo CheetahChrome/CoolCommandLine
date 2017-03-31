@@ -46,10 +46,14 @@ namespace CoolCommandLine
         /// </summary>
         public List<string> Letters { get; set; }
 
-
+        /// <summary>
+        /// What is the main leter of this option?
+        /// </summary>
         private List<char> LettersSingle { get; set; }
 
-
+        /// <summary>
+        /// What are the list of letters, or combination of letters which will provide, during runtime, a match, or argument found.
+        /// </summary>
         private List<string> LettersMultiple { get; set; }
 
         /// <summary>
@@ -57,7 +61,9 @@ namespace CoolCommandLine
         /// </summary>
         public string InitialLetterDefinition { get; set; }
 
-
+        /// <summary>
+        /// During runtime when a argument is selected, it is matched to what was specified. Argument found!
+        /// </summary>
         public bool ArgumentMatched { get; set; }
 
 
@@ -110,7 +116,14 @@ namespace CoolCommandLine
         }
 
  
-
+        /// <summary>
+        /// Setup an option and divine its attributes which will be processed during runtime.
+        /// </summary>
+        /// <param name="lettersDefinition"></param>
+        /// <param name="description"></param>
+        /// <param name="operation"></param>
+        /// <param name="isOptional"></param>
+        /// <param name="ignoreCase"></param>
         public Option(string lettersDefinition, string description, Action<CommandLineManager> operation, bool isOptional = true, bool ignoreCase = true)
         {
             InitialLetterDefinition = lettersDefinition;
@@ -146,7 +159,7 @@ namespace CoolCommandLine
 
 
         /// <summary>
-        /// Check a set of arguments to determine if there is a match.
+        /// Check a set of arguments to determine if there is a match from what the consumer sent in..
         /// </summary>
         /// <param name="args">The tokenized argument list.</param>
         /// <returns></returns>
