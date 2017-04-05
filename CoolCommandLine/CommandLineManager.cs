@@ -241,8 +241,6 @@ namespace CoolCommandLine
         public CommandLineManager DisplayTitleAndVersion(string title = "", string afterVersion = "")
         {
             //  var info = Assembly.GetCallingAssembly().FullName.Split(',');
-
-
             var info = new AssemblyInfoCalling();
 
             if (info != null)
@@ -320,6 +318,8 @@ namespace CoolCommandLine
         public CommandLineManager AssociateWithSubOptions(params string[] subOptions)
         {
             LastOption.AssociatedWithOptions = subOptions.ToList();
+
+
             return this;
         }
 
@@ -445,7 +445,8 @@ namespace CoolCommandLine
         {
             StringBuilder sb = new StringBuilder();
 
-            var PrimaryOptions = Options.Where(opt => opt.AssociatedWithOptions != null).ToList();
+            var PrimaryOptions = Options.Where(opt => opt.AssociatedWithOptions != null)
+                                        .ToList();
 
             if (PrimaryOptions.Any() == false) // Just show all options, there is not enough info to format with suboptions
             {
@@ -460,17 +461,22 @@ namespace CoolCommandLine
             }
             else
             {
+                // Find any options that don't have siblings nor are associated with a parent option and add them to the primary list to be displayed.
+                Options.Where(opt => opt.AssociatedWithOptions == null && PrimaryOptions.All(prim => prim.AssociatedWithOptions.Contains(opt.Letter) == false))
+                       .ToList()
+                       .ForEach( solo => PrimaryOptions.Add( solo ));
+
                 PrimaryOptions.Select(prime => new
                 {
                     Prime = prime,
-                    SubOptions = Options.Where(opt => prime.AssociatedWithOptions.Contains(opt.Letter))
+                    SubOptions = Options.Where(opt => prime.AssociatedWithOptions?.Contains(opt.Letter) ?? false)
                                         .ToList()
                 })
                 .ToList()
                 .ForEach(optimus =>
                 {
                     sb.AppendLine($"{optimus.Prime.ToString()} using");
-                    optimus.SubOptions.ForEach(sub => sb.AppendLine($"\t{sub.ToString()}"));
+                    optimus.SubOptions?.ForEach(sub => sb.AppendLine($"\t{sub.ToString()}"));
                     sb.AppendLine(string.Empty);
                 });
             }

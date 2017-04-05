@@ -35,6 +35,7 @@ namespace TestCommandLine
                   .DisplayBeforeDescription((o) => Console.WriteLine($"{info}{Environment.NewLine}"))
                   .DisplayProductAndVersion()
                   .DisplayDescriptionOnNoOperation()
+                  .AddOption("Q", "Queue the App into named pipe remote command mode", clm => Console.WriteLine("Queue Mode"))
                   .AddOption("U", "Upload a file to Azure", clm => Console.WriteLine("Uploading"))
                   .AddValidation(clm => true)
                   .AssociateWithSubOptions("F", "C", "B")
