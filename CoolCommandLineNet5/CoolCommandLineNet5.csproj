@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CoolCommandLine\Argument.cs" Link="Argument.cs" />
+    <Compile Include="..\CoolCommandLine\AssemblyInfo.cs" Link="AssemblyInfo.cs" />
+    <Compile Include="..\CoolCommandLine\CommandLineExtensions.cs" Link="CommandLineExtensions.cs" />
+    <Compile Include="..\CoolCommandLine\CommandLineManager.cs" Link="CommandLineManager.cs" />
+    <Compile Include="..\CoolCommandLine\Option.cs" Link="Option.cs" />
+  </ItemGroup>
+
+</Project>
